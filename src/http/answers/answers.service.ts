@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Answer } from 'src/schemas/answers.schema';
 
 @Injectable()
 export class AnswersService {
-  create(createAnswerDto: CreateAnswerDto) {
-    return 'This action adds a new answer';
+  constructor(
+    @InjectModel(Answer.name) private answerModel: Model<Answer>,
+  ) {}
+
+  async create(createAnswerDto: { questionnaireId: string; userId: string; responses: string[] }): Promise<Answer> {
+    const newAnswer = new this.answerModel(createAnswerDto);
+    return newAnswer.save();
   }
 
   findAll() {
