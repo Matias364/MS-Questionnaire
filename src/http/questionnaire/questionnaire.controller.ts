@@ -1,10 +1,18 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards } from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
 import { CreateQuestionnaireDto } from './dto/create-questionnaire.dto';
+import { AuthGuard } from '../guard/auth.guard';
 
 @Controller('questionnaires')
 export class QuestionnaireController {
   constructor(private readonly questionnaireService: QuestionnaireService) {}
+
+
+  @Get('prueba')
+  @UseGuards(AuthGuard)
+  prueba() {
+    return 'Hola mundo';
+  }
 
   // Crear un nuevo cuestionario
   @Post()
