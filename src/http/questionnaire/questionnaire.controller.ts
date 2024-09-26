@@ -1,34 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
 import { CreateQuestionnaireDto } from './dto/create-questionnaire.dto';
-import { UpdateQuestionnaireDto } from './dto/update-questionnaire.dto';
 
-@Controller('questionnaire')
+@Controller('questionnaires')
 export class QuestionnaireController {
   constructor(private readonly questionnaireService: QuestionnaireService) {}
 
+  // Crear un nuevo cuestionario
   @Post()
   create(@Body() createQuestionnaireDto: CreateQuestionnaireDto) {
     return this.questionnaireService.create(createQuestionnaireDto);
   }
 
+  // Obtener todos los cuestionarios
   @Get()
   findAll() {
     return this.questionnaireService.findAll();
   }
 
+  // Obtener un cuestionario por ID
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.questionnaireService.findOne(+id);
+    return this.questionnaireService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionnaireDto: UpdateQuestionnaireDto) {
-    return this.questionnaireService.update(+id, updateQuestionnaireDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionnaireService.remove(+id);
-  }
 }

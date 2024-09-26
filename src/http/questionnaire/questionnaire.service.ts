@@ -1,33 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { CreateQuestionnaireDto } from './dto/create-questionnaire.dto';
-import { UpdateQuestionnaireDto } from './dto/update-questionnaire.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Questionnaire } from 'src/schemas/questionnaire.schema';
+import { CreateQuestionnaireDto } from './dto/create-questionnaire.dto';
+
 
 @Injectable()
 export class QuestionnaireService {
   constructor(
-    @InjectModel(Questionnaire.name) private questionnaireModel: Model<Questionnaire>) {}
+    @InjectModel(Questionnaire.name) private questionnaireModel: Model<Questionnaire>,
+  ) {}
 
-  async create(createQuestionnaireDto: { title: string; questions: string[] }): Promise<Questionnaire> {
-    const newQuestionnaire = new this.questionnaireModel(createQuestionnaireDto);
-    return newQuestionnaire.save();
+  // Crear un nuevo cuestionario
+  async create(createQuestionnaireDto: CreateQuestionnaireDto): Promise<Questionnaire> {
+    const createdQuestionnaire = new this.questionnaireModel(createQuestionnaireDto);
+    return createdQuestionnaire.save();
   }
 
-  findAll() {
-    return `This action returns all questionnaire`;
+  // Obtener todos los cuestionarios
+  async findAll(): Promise<Questionnaire[]> {
+    return this.questionnaireModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} questionnaire`;
-  }
-
-  update(id: number, updateQuestionnaireDto: UpdateQuestionnaireDto) {
-    return `This action updates a #${id} questionnaire`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} questionnaire`;
+  // Obtener un cuestionario por ID
+  async findOne(id: string): Promise<Questionnaire | null> {
+    return this.questionnaireModel.findById(id).exec();
   }
 }

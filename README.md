@@ -1,3 +1,35 @@
+---Cosas importantes:
+1) Se puede conectar este microservicio con el mismo docker que se usa para el otro, tienen que crearle una base de datos extra en el mongodb en el localhost:27017, 
+en el .env tiene el nombre de la nueva para que usen el mismo y no colance
+2) no se como manejar el formulario como schema, seria mucho más facil hacer una pagina del cuestionario y de la respuesta que meta el usuario crear el answers. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>

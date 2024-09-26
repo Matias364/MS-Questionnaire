@@ -2,15 +2,22 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
+export class Question {
+  @Prop({ required: true })
+  questionText: string; // Texto de la pregunta
+
+  @Prop({ required: true })
+  questionType: string; // 'text', 'checkbox', 'radio'
+
+}
+
+@Schema()
 export class Questionnaire extends Document {
-  @Prop({ type: String, required: true })
-  title: string;
+  @Prop({ required: true })
+  title: string; // Título del formulario
 
-  @Prop({ type: [String], required: true }) // Array de preguntas
-  questions: string[];
-
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  @Prop({ type: [Question], required: true })
+  questions: Question[]; // Lista de preguntas
 }
 
 export const QuestionnaireSchema = SchemaFactory.createForClass(Questionnaire);
