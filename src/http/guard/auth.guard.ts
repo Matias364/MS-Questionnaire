@@ -14,11 +14,11 @@ export class AuthGuard implements CanActivate {
     try {
       const request = context.switchToHttp().getRequest();
       const token = request.headers['authorization']?.split(' ')[1];
-  
+      //console.log(this.httpService.get)
       const response = await lastValueFrom(
         this.httpService.get(
             
-          `${this.configService.get<string>('MS_IAM')}/check`,
+          `${this.configService.get<string>('MS-IAM')}/check`,
           
           {
             headers: { authorization: `Bearer ${token}` },

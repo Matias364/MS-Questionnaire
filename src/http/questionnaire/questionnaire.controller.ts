@@ -14,19 +14,16 @@ export class QuestionnaireController {
     return 'Hola mundo';
   }
 
-  // Crear un nuevo cuestionario
   @Post()
   create(@Body() createQuestionnaireDto: CreateQuestionnaireDto) {
     return this.questionnaireService.create(createQuestionnaireDto);
   }
 
-  // Obtener todos los cuestionarios
   @Get()
   findAll() {
     return this.questionnaireService.findAll();
   }
 
-  // Obtener un cuestionario por ID
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.questionnaireService.findOne(id);

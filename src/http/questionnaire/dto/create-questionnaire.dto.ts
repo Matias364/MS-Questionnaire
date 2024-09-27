@@ -1,6 +1,6 @@
 import { IsArray, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer'; // Importamos para el uso de ValidateNested en arrays
-import { QuestionDto } from './create-question.dto';
+import { CreateQuestionDto } from '../../question/dto/create-question.dto';
 
 export class CreateQuestionnaireDto {
   @IsString()
@@ -11,6 +11,6 @@ export class CreateQuestionnaireDto {
   
   @IsArray() // Validamos que sea un array de preguntas
   @ValidateNested({ each: true }) // Validamos que cada elemento del array sea un objeto válido
-  @Type(() => QuestionDto) // Necesario para transformar los objetos
-  questions: QuestionDto[]; // Lista de preguntas del formulario
+  @Type(() => CreateQuestionDto) // Necesario para transformar los objetos
+  questions: CreateQuestionDto[]; // Lista de preguntas del formulario
 }
