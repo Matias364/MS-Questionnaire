@@ -12,20 +12,25 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
+      // Construir la URL de verificación
+      const checkUrl = `${this.configService.get<string>('MS_IAM')}/check`;
+      console.log('URL de verificación:', checkUrl);
+      
+      // Obtener el request y el token
       const request = context.switchToHttp().getRequest();
       const token = request.headers['authorization']?.split(' ')[1];
-  
+
+      // Realizar la solicitud POST
       const response = await lastValueFrom(
-        this.httpService.get(
-            
-          `${this.configService.get<string>('MS_IAM')}/check`,
-          
+        this.httpService.post(
+          checkUrl, // Usa la URL construida
+          {}, // Puedes pasar un cuerpo vacío si no se requiere
           {
             headers: { authorization: `Bearer ${token}` },
           }
         )
       );
-  
+
       console.log('Respuesta del check:', response.data); // Verifica la respuesta del microservicio
       return true;
     } catch (error) {
@@ -34,4 +39,3 @@ export class AuthGuard implements CanActivate {
     }
   }
 }
-  
