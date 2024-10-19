@@ -14,5 +14,6 @@ import { ConfigModule } from '@nestjs/config';
   ],
   controllers: [QuestionnaireController],
   providers: [QuestionnaireService],
+  exports: [QuestionnaireService, MongooseModule]
 })
 export class QuestionnaireModule {}
