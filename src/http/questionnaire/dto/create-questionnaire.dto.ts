@@ -1,16 +1,53 @@
-import { IsArray, IsString, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer'; // Importamos para el uso de ValidateNested en arrays
-import { QuestionDto } from './create-question.dto';
+import { IsString, IsNotEmpty, IsArray, ValidateNested, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreateQuestionnaireDto {
+export class DataDTO {
   @IsString()
-  title: string; // Título del formulario, ej. "Check List Equipos"
+  @IsNotEmpty()
+  indicador: string; // Indicador de la data
 
   @IsString()
-  description: string; // Breve descripción del formulario
-  
-  @IsArray() // Validamos que sea un array de preguntas
-  @ValidateNested({ each: true }) // Validamos que cada elemento del array sea un objeto válido
-  @Type(() => QuestionDto) // Necesario para transformar los objetos
-  questions: QuestionDto[]; // Lista de preguntas del formulario
+  @IsNotEmpty()
+  respuesta: string; // Respuesta de la data
+}
+
+export class QuestionDTO {
+  @IsString()
+  @IsNotEmpty()
+  text: string; // El texto de la pregunta
+
+  @IsArray()
+  @IsNotEmpty()
+  alternatives: string[]; // Las alternativas de respuesta (ej. ["Sí", "No"])
+}
+
+export class SectionDTO {
+  @IsString()
+  @IsNotEmpty()
+  title: string; // El título de la sección (ej. "Estado General")
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => DataDTO)
+  data: DataDTO[]; // Array de datos iniciales
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => QuestionDTO)
+  questions: QuestionDTO[]; // Array de preguntas dentro de la sección
+
+  @IsString()
+  @IsOptional()
+  observations?: string; // Observaciones de la sección (opcional)
+}
+
+export class CreateQuestionnaireDTO {
+  @IsString()
+  @IsNotEmpty()
+  name: string; // Nombre del cuestionario (ej. "Check List Equipos")
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SectionDTO)
+  sections: SectionDTO[]; // Array de secciones dentro del cuestionario
 }

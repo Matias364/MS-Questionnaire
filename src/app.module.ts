@@ -5,6 +5,8 @@ import { QuestionnaireModule } from './http/questionnaire/questionnaire.module';
 import { AnswersModule } from './http/answers/answers.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { QuestionModule } from './http/question/question.module';
+import { SectionModule } from './http/section/section/section.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
     }),
     QuestionnaireModule,
-    AnswersModule
+    AnswersModule,
+    QuestionModule,
+    SectionModule
   ],
   controllers: [AppController],
   providers: [AppService],
