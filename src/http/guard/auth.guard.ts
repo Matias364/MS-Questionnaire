@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
     }
 
     // Hacer la llamada HTTP al microservicio IAM para verificar el token
-    return this.httpService.post('http://192.168.0.18:3000/auth/check', {}, { // Enviar el token en los headers
+    return this.httpService.post(`${process?.env?.MS_IAM as string}/check`, {}, { // Enviar el token en los headers
       headers: {
         Authorization: `Bearer ${token}`, // Enviar el token en el header
       },
