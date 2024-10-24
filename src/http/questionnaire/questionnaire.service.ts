@@ -18,8 +18,8 @@ export class QuestionnaireService {
   }
 
   // Obtener todos los cuestionarios
-  async findAll(): Promise<Questionnaire[]> {
-    return this.questionnaireModel.find().exec();
+  async findAllName(): Promise<Questionnaire[]> {
+    return this.questionnaireModel.find({},'name').exec();
   }
 
   // Obtener un cuestionario por ID

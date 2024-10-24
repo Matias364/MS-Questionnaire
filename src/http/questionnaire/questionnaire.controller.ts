@@ -9,19 +9,14 @@ import { useContainer } from 'class-validator';
 export class QuestionnaireController {
   constructor(private readonly questionnaireService: QuestionnaireService) {}
 
-  @Get('prueba')
-  prueba() {
-    return 'Hola mundo';
-  }
-
   @Post('CrearFomulario')
   create(@Body() createQuestionnaireDto: CreateQuestionnaireDTO) {
     return this.questionnaireService.create(createQuestionnaireDto);
   }
 
-  @Get()
-  findAll() {
-    return this.questionnaireService.findAll();
+  @Get('ObtenerNombreFormularios')
+  findAllName() {
+    return this.questionnaireService.findAllName();
   }
 
   @Get(':id')
