@@ -24,4 +24,9 @@ export class QuestionnaireController {
     return this.questionnaireService.findOne(id);
   }
 
+  @Get('ObtenerFormularioPorNombre/:name')
+  findOneByName(@Param('name') name: string) {
+    return this.questionnaireService.findOneByName(name);
+  }
+
 }

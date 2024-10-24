@@ -26,4 +26,9 @@ export class QuestionnaireService {
   async findOne(id: string): Promise<Questionnaire | null> {
     return this.questionnaireModel.findById(id).exec();
   }
+
+  //Obetener un cuestionario por nombre
+  async findOneByName(name: string): Promise<Questionnaire | null> {
+    return this.questionnaireModel.findOne({name: name}).exec();
+  }
 }
