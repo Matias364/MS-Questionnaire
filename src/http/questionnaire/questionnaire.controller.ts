@@ -4,7 +4,7 @@ import { CreateQuestionnaireDTO } from './dto/create-questionnaire.dto';
 import { AuthGuard } from '../guard/auth.guard';
 import { useContainer } from 'class-validator';
 
-@UseGuards(AuthGuard)
+//@UseGuards(AuthGuard)
 @Controller('questionnaires')
 export class QuestionnaireController {
   constructor(private readonly questionnaireService: QuestionnaireService) {}

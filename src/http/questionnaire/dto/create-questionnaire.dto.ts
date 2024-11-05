@@ -19,6 +19,11 @@ export class QuestionDTO {
   @IsArray()
   @IsNotEmpty()
   alternatives: string[]; // Las alternativas de respuesta (ej. ["Sí", "No"])
+
+  @IsOptional()
+  @IsString()
+  observation: string; // Por si se debe mencionar algo 
+
 }
 
 export class SectionDTO {

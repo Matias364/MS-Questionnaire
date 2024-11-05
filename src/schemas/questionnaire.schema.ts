@@ -17,6 +17,9 @@ class Question {
 
   @Prop({ type: [String], required: true })
   alternatives: string[]; // Las alternativas de respuesta (ej. ["Sí", "No"])
+
+  @Prop({type : String})
+  observation : string; // La observacion del usuario
 }
 
 // Subdocumento para las secciones dentro del cuestionario
