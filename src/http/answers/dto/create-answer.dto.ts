@@ -1,14 +1,59 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
-export class CreateAnswerDto {
-    @IsString()
-    @IsNotEmpty()
-    questionnaireId: string;
-  
-    @IsString()
-    @IsNotEmpty()
-    userId: string;
-  
-    @IsArray()
-    @IsNotEmpty({ each: true })
-    responses: string[];
-  }
+import { IsString, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class DataDTO {
+  @IsString()
+  indicador: string;
+
+  @IsString()
+  respuesta: string;
+}
+
+export class QuestionDTO {
+  @IsString()
+  text: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  alternatives: string[];
+
+  @IsString()
+  answer: string;
+
+  @IsString()
+  observation: string;
+}
+
+export class SectionDTO {
+  @IsString()
+  title: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => QuestionDTO)
+  questions: QuestionDTO[];
+
+  @IsString()
+  observations: string;
+}
+
+export class CreateAnswerDTO {
+  @IsString()
+  questionnaireId: string; // ID del cuestionario original
+
+  @IsString()
+  userId: string; // ID del usuario que responde
+
+  @IsString()
+  name: string; // Nombre del cuestionario
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => DataDTO)
+  data: DataDTO[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SectionDTO)
+  sections: SectionDTO[];
+}
