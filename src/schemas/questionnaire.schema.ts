@@ -5,8 +5,8 @@ import { Document } from 'mongoose';
 @Schema()
 class data{
   @Prop()
-  indicador: string; // Indicador de la data
-  respuesta: string; // Respuesta de la data
+  text: string; // Indicador de la data
+  observation: string; // Respuesta de la data
 }
 
 // Subdocumento para las preguntas dentro de las secciones
@@ -28,8 +28,11 @@ class Section {
   @Prop({ required: true })
   title: string; // El título de la sección (ej. "Estado General")
 
-  @Prop({ type: [Question], required: true })
+  @Prop({ type: [Question] })
   questions: Question[]; // Array de preguntas dentro de la sección
+
+  @Prop({ type: [data] })
+  data: data; 
 
   @Prop({ type: String })
   observations?: string; // Observaciones de la sección (opcional)
@@ -41,9 +44,6 @@ export class Questionnaire extends Document {
 
   @Prop({ required: true })
   name: string; // Nombre del cuestionario (ej. "Check List Equipos")
-
-  @Prop({type : [data], required: true})
-  data: data[]; // Array de datos iniciales
 
   @Prop({ type: [Section], required: true })
   sections: Section[]; // Array de secciones dentro del cuestionario

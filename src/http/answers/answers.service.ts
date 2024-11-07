@@ -14,8 +14,9 @@ export class AnswersService {
 // Función para crear una respuesta en la base de datos
 async createAnswer(createAnswerDTO: CreateAnswerDTO): Promise<Answer> {
   const { questionnaireId, userId, name, data, sections } = createAnswerDTO;
-   // Crear una nueva instancia del modelo Answer con el DTO
-   const newAnswer = new this.answerModel({
+
+  // Crear una nueva instancia del modelo Answer con el DTO
+  const newAnswer = new this.answerModel({
     questionnaireId,
     userId,
     name,

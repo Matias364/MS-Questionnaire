@@ -1,12 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-// Subdocumento para estructura de inidialData
+// Subdocumento para estructura de `data`
 @Schema()
-class data{
+class DataField {
   @Prop()
-  indicador: string; // Indicador de la data
-  respuesta: string; // Respuesta de la data
+  indicador: string; // Indicador del campo de datos
+
+  @Prop()
+  observation: string; // Observación del campo de datos
 }
 
 // Subdocumento para las preguntas dentro de las secciones
@@ -18,47 +20,46 @@ class Question {
   @Prop({ type: [String], required: true })
   alternatives: string[]; // Las alternativas de respuesta (ej. ["Sí", "No"])
 
-  @Prop({type : String})
-  answer : string; // La respuesta del usuario
+  @Prop()
+  answer?: string; // La respuesta del usuario
 
-  @Prop({type : String})
-  observation : string; // La observacion del usuario
+  @Prop()
+  observation?: string; // La observación del usuario
 }
 
 // Subdocumento para las secciones dentro del cuestionario
 @Schema()
 class Section {
   @Prop({ required: true })
-  title: string; // El título de la sección (ej. "Estado General")
+  title: string; // Título de la sección
 
-  @Prop({ type: [Question], required: true })
-  questions: Question[]; // Array de preguntas dentro de la sección
+  @Prop({ type: [Question] })
+  questions?: Question[]; // Array de preguntas dentro de la sección
 
-  @Prop({ type: String })
-  observations?: string; // Observaciones de la sección (opcional)
+  @Prop({ type: [DataField] }) // Definición correcta del array `data`
+  data?: DataField[]; // Array de campos de datos
+
+  @Prop()
+  observations?: string; // Observación general de la sección (opcional)
 }
 
-// Esquema principal para el cuestionario sin respuestas
+// Esquema principal para el cuestionario con respuestas
 @Schema({ timestamps: true })
 export class Answer extends Document {
-
-  @Prop({ type: String, required: true })
+  @Prop({ required: true })
   questionnaireId: string; // Referencia al cuestionario
 
-  @Prop({ type: String, required: true })
+  @Prop({ required: true })
   userId: string; // Referencia al usuario
 
   @Prop({ required: true })
-  name: string; // Nombre del cuestionario (ej. "Check List Equipos")
+  name: string; // Nombre del cuestionario
 
-  @Prop({type : [data], required: true})
-  data: data[]; // Array de datos iniciales
+  @Prop({ type: [DataField], default: [] })
+  data: DataField[]; // Array de datos iniciales
 
   @Prop({ type: [Section], required: true })
   sections: Section[]; // Array de secciones dentro del cuestionario
-
-  @Prop({ default: Date.now })
-  createdAt?: Date; // Fecha de creación (auto generado por timestamps)
 }
 
 export const AnswerSchema = SchemaFactory.createForClass(Answer);

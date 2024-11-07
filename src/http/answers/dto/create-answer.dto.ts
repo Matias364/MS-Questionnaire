@@ -1,4 +1,4 @@
-import { IsString, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsArray, ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class DataDTO {
@@ -6,7 +6,8 @@ export class DataDTO {
   indicador: string;
 
   @IsString()
-  respuesta: string;
+  @IsOptional() // Hacer opcional en caso de que no todas las respuestas tengan observación
+  observation: string;
 }
 
 export class QuestionDTO {
