@@ -7,7 +7,7 @@ export class DataDTO {
   indicador: string; // Indicador de la data
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   respuesta: string; // Respuesta de la data
 }
 

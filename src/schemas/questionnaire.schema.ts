@@ -4,9 +4,11 @@ import { Document } from 'mongoose';
 // Subdocumento para estructura de inidialData
 @Schema()
 class data{
+  @Prop({ required: true })
+  indicador: string; // Indicador del campo de datos
+
   @Prop()
-  text: string; // Indicador de la data
-  observation: string; // Respuesta de la data
+  observation?: string; // Observación del campo de datos (opcional)
 }
 
 // Subdocumento para las preguntas dentro de las secciones
@@ -32,7 +34,7 @@ class Section {
   questions: Question[]; // Array de preguntas dentro de la sección
 
   @Prop({ type: [data] })
-  data: data; 
+  data: data[]; 
 
   @Prop({ type: String })
   observations?: string; // Observaciones de la sección (opcional)
