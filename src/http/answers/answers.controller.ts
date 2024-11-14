@@ -12,9 +12,13 @@ export class AnswersController {
     return this.answersService.createAnswer(createAnswerDTO);
   }
 
-  @Get('obtenerR/:userId')
-  findAll(@Param('userId') userId: string) {
+  @Get('info/:userId')
+  findAllInfo(@Param('userId') userId: string) {
     return this.answersService.getAnswersByUser(userId);
   }
 
+  @Get('data/:userId')
+  findAll(@Param('userId') userId: string) {
+    return this.answersService.getAnswersByUserFull(userId);
+  }
 }
