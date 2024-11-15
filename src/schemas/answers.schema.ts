@@ -60,6 +60,9 @@ export class Answer extends Document {
 
   @Prop({ type: [Section], required: true })
   sections: Section[]; // Array de secciones dentro del cuestionario
+
+  @Prop({type: [String]})
+  images?: string[]
 }
 
 export const AnswerSchema = SchemaFactory.createForClass(Answer);

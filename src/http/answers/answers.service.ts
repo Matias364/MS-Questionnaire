@@ -4,6 +4,9 @@ import { UpdateAnswerDto } from './dto/update-answer.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Answer } from 'src/schemas/answers.schema';
+import * as fs from 'fs';
+import * as path from 'path';
+import { error } from 'console';
 
 @Injectable()
 export class AnswersService {
@@ -13,7 +16,9 @@ export class AnswersService {
 
 // Función para crear una respuesta en la base de datos
 async createAnswer(createAnswerDTO: CreateAnswerDTO): Promise<Answer> {
-  const { questionnaireId, userId, name, data, sections } = createAnswerDTO;
+  const { questionnaireId, userId, name, data, sections , images} = createAnswerDTO;
+
+  const urlImages = await this.saveBase64Image(images!, name);
 
   // Crear una nueva instancia del modelo Answer con el DTO
   const newAnswer = new this.answerModel({
@@ -22,11 +27,49 @@ async createAnswer(createAnswerDTO: CreateAnswerDTO): Promise<Answer> {
     name,
     data,
     sections,
+    images: urlImages,
   });
 
   // Guardar la nueva respuesta en la base de datos
   return newAnswer.save();
 }
+
+async saveBase64Image(imageBase64Array: string[], imageNamePrefix: string): Promise<string[]> {
+  const imagesPaths: string[] = []; 
+  try {
+    // Crear una carpeta si no existe
+    //Posible error al guardar las imagenes, se sobreescriben y no cambian el nombre
+    const folderPath = path.join(__dirname, 'images');
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath);
+    }
+
+    for (let i = 0; i < imageBase64Array.length; i++) {
+      const imageBase64 = imageBase64Array[i];
+      const base64Data = imageBase64.split(';base64,').pop();
+
+      if (!base64Data) {
+        throw new Error(`La cadena base64 de la imagen ${i + 1} no es válida`);
+      }
+
+      // Generar un nombre único para la imagen
+      const imageName = `${imageNamePrefix}_image_${i + 1}.jpg`; // Usamos el índice para dar nombres únicos
+      const filePath = path.join(folderPath, imageName);
+
+      // Escribir el archivo en disco
+      fs.writeFileSync(filePath, base64Data, { encoding: 'base64' });
+
+      console.log(`Imagen ${i + 1} guardada correctamente en la ruta ${filePath}`); //Eliminar los console.log cuando funcione todo bien
+
+      imagesPaths.push(filePath);
+    }
+  } catch (error) {
+    console.error('Error al guardar la imagen:', error);
+  }
+  
+  return imagesPaths;
+}
+
 
 // Función para obtener todas las respuestas de un usuario
 async getAnswersByUser(userId: string): Promise<Answer[]> {
