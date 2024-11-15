@@ -21,4 +21,9 @@ export class AnswersController {
   findAll(@Param('userId') userId: string) {
     return this.answersService.getAnswersByUserFull(userId);
   }
+
+  @Get('idAnswer/:id')
+  findOne(@Param('id') id: string) {
+    return this.answersService.getAnswerById(id);
+  }
 }

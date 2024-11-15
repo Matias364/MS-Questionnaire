@@ -38,5 +38,14 @@ async getAnswersByUserFull(userId: string): Promise<Answer[]> {
   return this.answerModel.find({ userId }).exec(); 
 }
 
+//funcion para obtener respuesta por id
+async getAnswerById(id: string): Promise<Answer> {
+  const answer = await this.answerModel.findById(id).exec();
+  if (!answer) {
+    throw new NotFoundException(`Answer with ID ${id} not found`);
+  }
+  return answer;
+}
+
 }
 
