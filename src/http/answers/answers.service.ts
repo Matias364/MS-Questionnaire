@@ -79,6 +79,7 @@ async getAnswersByUser(userId: string): Promise<{
   return this.answerModel
     .find({ userId })
     .select('name createdAt sections')
+    .sort({ createdAt: -1 }) // Ordena por fecha descendente
     .lean() // Asegura que devuelve objetos simples
     .exec()
     // Mapea las respuestas para extraer el nombre, la fecha de creación y la observación de la patente
