@@ -70,10 +70,36 @@ async saveBase64Image(imageBase64Array: string[], imageNamePrefix: string): Prom
   return imagesPaths;
 }
 
+//funcion para obtener nombre, fecha de creacion y observacion de patente de un usuario
+async getAnswersByUser(userId: string): Promise<{ 
+  name: string; 
+  createdAt: Date; 
+  patenteObservation: string | null; 
+}[]> {
+  return this.answerModel
+    .find({ userId })
+    .select('name createdAt sections')
+    .lean() // Asegura que devuelve objetos simples
+    .exec()
+    // Mapea las respuestas para extraer el nombre, la fecha de creación y la observación de la patente
+    //el then se usa para mapear las respuestas
+    .then(answers =>
+      answers.map(answer => {
+        const dataSection = answer.sections?.find(
+          (section: any) => section.title === 'data' // Encuentra la sección con título "data"
+        );
 
-// Función para obtener todas las respuestas de un usuario
-async getAnswersByUser(userId: string): Promise<Answer[]> {
-  return this.answerModel.find({ userId }).select('name').exec();
+        const patenteData = dataSection?.data?.find(
+          (dataItem: any) => dataItem.indicador === 'Patente' // Busca el indicador "Patente"
+        );
+
+        return {
+          name: answer.name,
+          createdAt: answer.createdAt,
+          patenteObservation: patenteData?.observation || null, // Devuelve la observación o `null`
+        };
+      })
+    );
 }
 
 // Función para obtener todas las respuestas de un usuario

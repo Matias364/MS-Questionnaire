@@ -63,6 +63,8 @@ export class Answer extends Document {
 
   @Prop({type: [String]})
   images?: string[]
+
+  createdAt: Date; // Fecha de creación (agregada automáticamente por `timestamps`)
 }
 
 export const AnswerSchema = SchemaFactory.createForClass(Answer);
