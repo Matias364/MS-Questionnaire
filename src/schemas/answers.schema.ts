@@ -61,8 +61,8 @@ export class Answer extends Document {
   @Prop({ type: [Section], required: true })
   sections: Section[]; // Array de secciones dentro del cuestionario
 
-  @Prop({type: [String]})
-  images?: string[]
+  @Prop({ type: [String], default: [] })
+  images: string[];
 
   createdAt: Date; // Fecha de creación (agregada automáticamente por `timestamps`)
 }

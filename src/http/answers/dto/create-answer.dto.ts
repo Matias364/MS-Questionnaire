@@ -1,4 +1,4 @@
-import { IsString, IsArray, ValidateNested, IsOptional, isString } from 'class-validator';
+import { IsString, IsArray, ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class DataDTO {
@@ -59,6 +59,7 @@ export class CreateAnswerDTO {
   sections: SectionDTO[];
 
   @IsArray()
-  @IsString({each: true})
+  @IsString({ each: true })
+  @IsOptional() // Añadido para hacerlo opcional
   images?: string[];
 }
