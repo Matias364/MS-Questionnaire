@@ -51,7 +51,7 @@ export class AnswersService {
       }
 
       // Crear una carpeta para las imágenes si no existe
-      const folderPath = path.join(__dirname, 'uploads');
+      const folderPath = path.join(__dirname, '..', '..', '..', 'uploads');
       if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
       }
@@ -66,7 +66,7 @@ export class AnswersService {
       console.log(`Imagen guardada correctamente en la ruta ${filePath}`);
 
       // Construir la URL de la imagen para usarla en la base de datos
-      const imageUrl = `http://localhost:3001/answers/uploads/${fileName}`;
+      const imageUrl = `http://localhost:3001/uploads/${fileName}`;
       console.log(`URL de la imagen: ${imageUrl}`);
 
       // Retornar la URL o ruta de la imagen guardada
