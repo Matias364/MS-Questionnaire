@@ -10,6 +10,12 @@ export class DataDTO {
   observation: string;
 }
 
+export class ImageDTO {
+  @IsArray()
+  @IsString({ each: true }) // Valida que cada elemento del array sea un string
+  images: string[];
+}
+
 export class QuestionDTO {
   @IsString()
   text: string;
@@ -32,10 +38,19 @@ export class SectionDTO {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => QuestionDTO)
-  questions: QuestionDTO[];
+  @IsOptional()
+  questions?: QuestionDTO[];
 
-  @IsString()
-  observations: string;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => DataDTO)
+  @IsOptional()
+  data?: DataDTO[];
+
+  @ValidateNested()
+  @Type(() => ImageDTO)
+  @IsOptional()
+  images?: ImageDTO; // Campo opcional para imágenes en la sección
 }
 
 export class CreateAnswerDTO {
@@ -50,16 +65,6 @@ export class CreateAnswerDTO {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => DataDTO)
-  data: DataDTO[];
-
-  @IsArray()
-  @ValidateNested({ each: true })
   @Type(() => SectionDTO)
   sections: SectionDTO[];
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional() // Añadido para hacerlo opcional
-  images?: string[];
 }

@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseInterceptors,
+  BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AnswersService } from './answers.service';
@@ -36,14 +38,23 @@ export class AnswersController {
   findOne(@Param('id') id: string) {
     return this.answersService.getAnswerById(id);
   }
-  //Añadido metodo post para guardar imagenes
-  @Post('uploadsImages')
-  @UseInterceptors(FileInterceptor('image'))
-  async uploadImage(@Body() body: { image: string; answerId: string }) {
-    const imageUrl = await this.answersService.processAndSaveImage(
-      body.image,
-      body.answerId,
-    );
-    return { imageUrl };
-  }
+
+//endpoint para subir imágenes
+@Post('uploadsImages')
+async uploadImages(@Body() body: { images: string[]; answerId: string }) {
+	console.log('Imágenes recibidas en el backend:', body.images);
+	if (!body.images || body.images.length === 0) {
+		throw new BadRequestException('No se proporcionaron imágenes para subir.');
+	}
+
+	// Procesar todas las imágenes
+	const imageUrls = await Promise.all(
+		body.images.map((image) =>
+			this.answersService.processAndSaveImage(image, body.answerId),
+		),
+	);
+
+	return { imageUrls };
+
+}
 }
