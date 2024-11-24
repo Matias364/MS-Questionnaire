@@ -39,8 +39,6 @@ class Section {
   @Prop({ type: [DataField] }) // Definición correcta del array `data`
   data?: DataField[]; // Array de campos de datos
 
-  @Prop()
-  observations?: string; // Observación general de la sección (opcional)
 }
 
 // Esquema principal para el cuestionario con respuestas
@@ -61,7 +59,7 @@ export class Answer extends Document {
   @Prop({ type: [Section], required: true })
   sections: Section[]; // Array de secciones dentro del cuestionario
 
-  @Prop({ type: [String], default: [] })
+  @Prop({ type: [String], default: [] }) // Nuevo campo global para imágenes
   images: string[];
 
   createdAt: Date; // Fecha de creación (agregada automáticamente por `timestamps`)

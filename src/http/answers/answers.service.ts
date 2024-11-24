@@ -12,42 +12,21 @@ import { error } from 'console';
 export class AnswersService {
   constructor(@InjectModel(Answer.name) private answerModel: Model<Answer>) {}
 
-// Función para crear una respuesta en la base de datos
-async createAnswer(createAnswerDTO: CreateAnswerDTO): Promise<Answer> {
-  const { questionnaireId, userId, name, sections } = createAnswerDTO;
-
-  // Procesar imágenes dentro de las secciones
-  const updatedSections = await Promise.all(
-    sections.map(async (section) => {
-      if (section.images?.images && section.images.images.length > 0) {
-        // Procesar y guardar cada imagen en la sección
-        const processedImages = await Promise.all(
-          section.images.images.map(async (image: string) => {
-            const imageUrl = await this.processAndSaveImage(image, name);
-            return imageUrl; // URL procesada de la imagen
-          })
-        );
-
-        // Actualizar la sección con las imágenes procesadas
-        return { ...section, images: { images: processedImages } };
-      }
-
-      // Si no hay imágenes, devuelve la sección tal cual
-      return section;
-    })
-  );
-
-  // Crear una nueva instancia del modelo Answer con el DTO actualizado
-  const newAnswer = new this.answerModel({
-    questionnaireId,
-    userId,
-    name,
-    sections: updatedSections, // Secciones con imágenes procesadas
-  });
-
-  // Guardar la nueva respuesta en la base de datos
-  return newAnswer.save();
-}
+  //funcion para crear respuesta
+  async createAnswer(createAnswerDTO: CreateAnswerDTO): Promise<Answer> {
+    const { questionnaireId, userId, name, sections, images } = createAnswerDTO;
+  
+    const newAnswer = new this.answerModel({
+      questionnaireId,
+      userId,
+      name,
+      sections,
+      images, // Guarda las imágenes procesadas
+    });
+  
+    return newAnswer.save();
+  }
+  
 
 async processAndSaveImage(base64Image: string, answerId: string): Promise<string> {
   try {
@@ -55,38 +34,30 @@ async processAndSaveImage(base64Image: string, answerId: string): Promise<string
       throw new Error('La imagen proporcionada no es válida');
     }
 
-    // Extraer la parte base64 de la cadena (sin el encabezado 'data:image/...;base64,')
     const base64Data = base64Image.split(';base64,').pop();
-
     if (!base64Data) {
       throw new Error('La cadena base64 no es válida');
     }
 
-    // Crear una carpeta para las imágenes si no existe
     const folderPath = path.join(__dirname, '..', '..', '..', 'uploads');
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath, { recursive: true });
     }
 
-    // Generar un nombre único para la imagen
     const fileName = `image_${answerId}_${Date.now()}.jpg`;
     const filePath = path.join(folderPath, fileName);
 
-    // Escribir la imagen en el sistema de archivos
     fs.writeFileSync(filePath, base64Data, { encoding: 'base64' });
 
-    console.log(`Imagen guardada correctamente en la ruta ${filePath}`);
-
-    // Construir la URL de la imagen para usarla en la base de datos
     const imageUrl = `http://localhost:3001/uploads/${fileName}`;
-    console.log(`URL de la imagen: ${imageUrl}`);
-
+    console.log(`Imagen guardada correctamente: ${imageUrl}`);
     return imageUrl;
   } catch (error) {
-    console.error('Error al guardar la imagen:', error.message);
+    console.error('Error al procesar la imagen:', error.message);
     throw new Error('Error al procesar la imagen');
   }
 }
+
 
 
   //funcion para obtener nombre, fecha de creacion y observacion de patente de un usuario
@@ -141,4 +112,6 @@ async processAndSaveImage(base64Image: string, answerId: string): Promise<string
     }
     return answer;
   }
+
+  
 }
