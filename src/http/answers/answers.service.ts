@@ -28,35 +28,50 @@ export class AnswersService {
   }
   
 
-async processAndSaveImage(base64Image: string, answerId: string): Promise<string> {
-  try {
-    if (!base64Image || typeof base64Image !== 'string') {
-      throw new Error('La imagen proporcionada no es válida');
+  async processAndSaveImage(base64Image: string, answerId: string): Promise<string> {
+    try {
+      // Validar que la imagen tiene un formato base64 correcto
+      if (!base64Image || !base64Image.startsWith('data:image/')) {
+        throw new Error('La imagen proporcionada no tiene un formato válido.');
+      }
+  
+      // Extraer el tipo de archivo (mime type)
+      const mimeTypeMatch = base64Image.match(/data:(image\/\w+);base64,/);
+      if (!mimeTypeMatch) {
+        throw new Error('El encabezado Base64 de la imagen es inválido.');
+      }
+      const mimeType = mimeTypeMatch[1]; // Ejemplo: "image/jpeg"
+      const extension = mimeType.split('/')[1]; // Ejemplo: "jpeg"
+  
+      // Extraer los datos base64
+      const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+      if (!base64Data) {
+        throw new Error('La cadena base64 de la imagen está vacía.');
+      }
+  
+      // Crear la carpeta de destino si no existe
+      const folderPath = path.join(__dirname, '..', '..', '..', 'uploads');
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+      }
+  
+      // Generar un nombre único para el archivo
+      const fileName = `image_${answerId}_${Date.now()}.${extension}`;
+      const filePath = path.join(folderPath, fileName);
+  
+      // Guardar el archivo en formato base64
+      fs.writeFileSync(filePath, base64Data, { encoding: 'base64' });
+  
+      // Generar la URL pública de la imagen
+      const imageUrl = `http://localhost:3001/uploads/${fileName}`;
+      console.log(`Imagen guardada correctamente: ${imageUrl}`);
+      return imageUrl;
+    } catch (error) {
+      console.error('Error al procesar la imagen:', error.message);
+      throw new Error('Error al procesar la imagen');
     }
-
-    const base64Data = base64Image.split(';base64,').pop();
-    if (!base64Data) {
-      throw new Error('La cadena base64 no es válida');
-    }
-
-    const folderPath = path.join(__dirname, '..', '..', '..', 'uploads');
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath, { recursive: true });
-    }
-
-    const fileName = `image_${answerId}_${Date.now()}.jpg`;
-    const filePath = path.join(folderPath, fileName);
-
-    fs.writeFileSync(filePath, base64Data, { encoding: 'base64' });
-
-    const imageUrl = `http://localhost:3001/uploads/${fileName}`;
-    console.log(`Imagen guardada correctamente: ${imageUrl}`);
-    return imageUrl;
-  } catch (error) {
-    console.error('Error al procesar la imagen:', error.message);
-    throw new Error('Error al procesar la imagen');
   }
-}
+  
 
 
 
@@ -112,6 +127,8 @@ async processAndSaveImage(base64Image: string, answerId: string): Promise<string
     }
     return answer;
   }
+
+
 
   
 }

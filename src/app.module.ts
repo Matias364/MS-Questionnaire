@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module,MiddlewareConsumer,NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { QuestionnaireModule } from './http/questionnaire/questionnaire.module';
@@ -7,9 +7,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { QuestionModule } from './http/question/question.module';
 import { SectionModule } from './http/section/section/section.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'uploads'), // Ruta de la carpeta donde están las imágenes
+      serveRoot: '/uploads', // Ruta base para acceder a las imágenes
+    }),
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -27,4 +33,8 @@ import { SectionModule } from './http/section/section/section.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule  implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // Otros middlewares si es necesario
+  }
+}
