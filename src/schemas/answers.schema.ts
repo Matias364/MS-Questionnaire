@@ -62,6 +62,9 @@ export class Answer extends Document {
   @Prop({ type: [String], default: [] }) // Nuevo campo global para imágenes
   images: string[];
 
+  @Prop({required: true})
+  locationA: string
+
   createdAt: Date; // Fecha de creación (agregada automáticamente por `timestamps`)
 }
 

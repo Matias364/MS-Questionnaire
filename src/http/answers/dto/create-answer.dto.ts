@@ -62,4 +62,7 @@ export class CreateAnswerDTO {
   @IsString()
   @IsOptional()
   images: string[];
+
+  @IsString()
+  locationA: string;
 }

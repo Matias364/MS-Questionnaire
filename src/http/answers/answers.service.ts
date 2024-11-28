@@ -14,7 +14,7 @@ export class AnswersService {
 
   //funcion para crear respuesta
   async createAnswer(createAnswerDTO: CreateAnswerDTO): Promise<Answer> {
-    const { questionnaireId, userId, name, sections, images } = createAnswerDTO;
+    const { questionnaireId, userId, name, sections, images, locationA} = createAnswerDTO;
   
     const newAnswer = new this.answerModel({
       questionnaireId,
@@ -22,6 +22,7 @@ export class AnswersService {
       name,
       sections,
       images, // Guarda las imágenes procesadas
+      locationA
     });
   
     return newAnswer.save();
